@@ -19,12 +19,16 @@ class MythicClient(Client.Client):
     async def executeCommand(self, command, parameters):
         return await mythic.issue_task_and_waitfor_task_output(self.mythicInstance, command, parameters, self.displayID)
 
-    # Agent downloads from mythic server
-    # Note:
-    # - Mythic agent must have LS capabilities (not shell command LS, but LS built into mythic) to see files using mythic built-in function
-    # (We could code our method via parsing shell ls output but ew)
-    # - LS command in mythic can NOT recursively list files, therefore must either know path or code our own recursion
-    async def uploadAndRunPayload(self, payload, runCommand):
-        fileID = await mythic.register_file(payload)
-        await self.executeCommand("upload", "-remote_path {remotePath} -file {fileID}")
-        # TODO
+    async def getMythicInstance(self):
+        return self.mythicInstance
+
+    async def upload_file(self, fileBytes, remotePath):
+        fileID = await mythic.register_file(self.mythicInstance, "test.txt", fileBytes)
+
+        fileJSON = {
+            "host":"",
+            "remote_path":remotePath,
+            "file":fileID
+        }
+
+        await self.executeCommand("upload", fileJSON)
