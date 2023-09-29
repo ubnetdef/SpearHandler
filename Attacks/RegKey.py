@@ -1,30 +1,32 @@
+#Change Program Name and Path otherwise works
+
 import os
-import winreg as winreg
+import sys
+import ctypes
+import winreg
 
-from Attack import Attack
+def add_program_to_startup(program_name, program_path):
+    try:
+        # Open the registry key for startup programs
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_WRITE)
 
-class RegKey(Attack):
-    def __init__(self, name):
-        self.name = name
-        
-    def execute(self):
-        # Specify the path to the program or file you want to run at startup
-        file_path = r"C:/virus.exe"
+        # Set the registry value with the program name and path
+        winreg.SetValueEx(key, program_name, 0, winreg.REG_SZ, program_path)
 
-        # Set the registry key path for startup programs
-        key_path = r"Software/Microsoft/Windows/CurrentVersion/Run"
+        # Close the registry key
+        winreg.CloseKey(key)
 
-        # Define the name you want for your startup entry (it can be any string)
-        entry_name = "Good_Software"
+        print(f"Added '{program_name}' to startup with path: {program_path}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
 
-        try:
-            # Open the registry key for writing
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path, 0, winreg.KEY_WRITE) as registry_key:
-                winreg.SetValueEx(registry_key, entry_name, 0, winreg.REG_SZ, file_path)
+if __name__ == "__main__":
+    if ctypes.windll.shell32.IsUserAnAdmin() != 1:
+        # Check if the script is running with admin privileges, if not, restart it with admin privileges
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+    else:
+        # Add the Windows Calculator to startup
+        program_name = "Calculator"
+        program_path = r"C:\Windows\System32\calc.exe"  # Path to the Calculator executable
 
-            print(f"Added {entry_name} to startup with the path: {file_path}")
-        except Exception as e:
-            error = "An error occurred: {e}"
-            return error
-
-        return "Executed Successfully!!!"
+        add_program_to_startup(program_name, program_path)
