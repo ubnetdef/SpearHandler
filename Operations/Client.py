@@ -4,5 +4,5 @@ class Client():
     def __init__():
         print("Hi!")
 
-    def executeCommand(string):
-        raise NotImplementedError("executeCommand in client not implemented!")
+    def executeShell(string):
+        raise NotImplementedError("executeShell in client not implemented!")
