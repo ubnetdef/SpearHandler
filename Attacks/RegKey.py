@@ -1,6 +1,5 @@
 #When making an attack just provide malacious program name and path and it will add it to startups
 
-import os
 import sys
 import ctypes
 import winreg
