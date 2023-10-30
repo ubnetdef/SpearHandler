@@ -1,4 +1,4 @@
-import Client
+from Operations import Client
 from mythic import mythic
 
 class MythicClient(Client.Client):
