@@ -14,9 +14,11 @@ class MythicClient(Client.Client):
         self.mythicInstance = await mythic.login("34.237.94.238", apitoken=apitoken)
 
     async def executeShell(self, shellCommand):
-        return await mythic.issue_task_and_waitfor_task_output(self.mythicInstance, "shell", shellCommand, self.displayID)
+        args = {"arguments": shellCommand}
+        return await mythic.issue_task_and_waitfor_task_output(self.mythicInstance, "shell", args, self.displayID)
 
     async def executeCommand(self, command, parameters):
+        # The parameters are actually a object that are passed in, the parameters of that object can be found by doing "help COMMANDNAMEHERE" in mythic
         return await mythic.issue_task_and_waitfor_task_output(self.mythicInstance, command, parameters, self.displayID)
 
     async def getMythicInstance(self):

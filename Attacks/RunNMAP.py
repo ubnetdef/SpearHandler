@@ -25,7 +25,8 @@ class RunNMAP(Attack.Attack):
 
     def __parseNMAPToDatatypes(self, nmapOutput):
         pattern = re.compile(r"[0-9]+/[A-Za-z]+\s+[A-Za-z]+\s+[A-Za-z-]+", re.IGNORECASE)
-        matched = pattern.findall(nmapOutput) # This needs testing
+        print(nmapOutput)
+        matched = pattern.findall(str(nmapOutput)) # This needs testing
 
         for i in range(len(matched)):
                 rawPortStateService = matched[i]
@@ -54,9 +55,9 @@ class RunNMAP(Attack.Attack):
             name = service[3]
             externallyAccessible = True
 
-            serviceData = ServiceData(name, port, externallyAccessible)
+            serviceData = ServiceData.ServiceData(name, port, externallyAccessible)
 
-            clientData = Database.Database().getClientData(ip)
+            clientData = Database.Database().getOrAddClientData(ip)
             clientData.servicesData.addServiceData(serviceData)
 
     async def execute(self, client: Client.Client, operation: Operation.Operation):

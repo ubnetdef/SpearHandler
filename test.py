@@ -7,7 +7,7 @@ async def main():
 
     testOperation = Operation.Operation(inScopeIPs, clients)
 
-    displayID = 122
+    displayID = 123
     startKaliClient = MythicClient.MythicClient(displayID)
     await startKaliClient.initializeMythic()
 
