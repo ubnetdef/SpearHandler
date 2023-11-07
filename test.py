@@ -1,4 +1,6 @@
 from Operations import Operation, MythicClient
+from Operations.MythicClient import MythicC2, MythicClient
+from mythic.mythic_classes import Mythic
 import asyncio
 
 async def main():
@@ -13,6 +15,13 @@ async def main():
 
     testOperation.addClient(startKaliClient)
 
-    await testOperation.startOperation()
+    #await testOperation.startOperation()
+    await testOperation.runAttack()
 
-asyncio.run(main())
+async def main2():
+    mythic: MythicC2 = await MythicC2().connect()
+    clients: list[MythicClient] = await mythic.getActiveClients()
+    for client in clients:
+        print(str(await client.getLastCheckinSeconds()))
+
+asyncio.run(main2())
