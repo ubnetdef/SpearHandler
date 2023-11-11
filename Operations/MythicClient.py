@@ -52,8 +52,8 @@ class MythicClient(Client.Client):
             if client['display_id'] == self.displayID:
                 rawIP = client['ip']
                 pattern = re.compile(r"\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\b", re.IGNORECASE)
-                ips = pattern.findall(rawIP)[0]
-                return ips[0]
+                parsedIP = pattern.search(rawIP)[0]
+                return parsedIP
 
     async def getLastCheckinSeconds(self):
         timestamp = await self.getLastCheckinTimestamp()

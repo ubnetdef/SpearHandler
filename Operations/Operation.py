@@ -18,7 +18,8 @@ class Operation():
         client: Client = self.c2Clients[0]
         await client.executeAttack(RunNMAP("nmaptest"), self)
         # Todo: add more to start of operation here
-        await client.executeAttack(ServiceStopper("servicestopped"), self)
+        testUbuntu: Client = self.c2Clients[1]
+        await testUbuntu.executeAttack(ServiceStopper("servicestopped"), self)
 
     async def runAttack(self, client: Client, attack: Attack):
         await client.executeAttack(attack)

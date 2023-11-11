@@ -76,12 +76,16 @@ async def main():
 
     testOperation = Operation.Operation(inScopeIPs)
 
-    displayID = 128
+    displayID = 129
     mythicServer = await MythicC2().connect()
     print("WEEEEEEEEEEEEEEEEEEEEEE")
     startKaliClient = MythicClient(displayID, mythicServer.mythicInstance)
 
+    displayID2 = 131
+    testClient = MythicClient(displayID2, mythicServer.mythicInstance)
+
     testOperation.addC2Client(startKaliClient)
+    testOperation.addC2Client(testClient)
 
     print("TEEEEEEEEE")
     await testOperation.startOperation()
