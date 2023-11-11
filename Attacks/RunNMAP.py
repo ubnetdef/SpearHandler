@@ -14,23 +14,39 @@ from Data.Techniques.ClientsData import ClientsData
 # This is intended to be run on the starting malicious attacker client
 
 class RunNMAP(Attack.Attack):
+    def __parsePortXML(portXML):
+        portNumber = portXML.attrib["portid"]
+        servicesXML = portXML.findall("./service")
+        return portNumber, servicesXML
 
-    def __parseToServiceData(self, rawdata):
-        xmlParsed = ET.fromstring(rawdata)
-        hostsXML = xmlParsed.findall("./host")
+    def __parseNMAPXMLToHostsXML(rawXMLString):
+        xmlObject = ET.fromstring(rawXMLString)
+        HOSTS_XML_PATH = "./host"
+        hostsXML = xmlObject.findall(HOSTS_XML_PATH)
+        return hostsXML
+
+    def __parseHostXML(hostXML):
+        portsXML = hostXML.findall("./ports/port")
+        addressXML = hostXML.findall("./address")
+        address = addressXML[0].attrib['addr']
+        return portsXML, address
+    
+    def __parseServiceXMLToServiceData(serviceXML, portNumber):
+        serviceName = serviceXML.attrib.get('product','')
+        serviceType = serviceXML.attrib['name']
+        serviceData = ServiceData(name=serviceName, type=serviceType, port=portNumber, externallyAccessible=True)
+        return serviceData
+
+    def __parseNMAPXMLToServiceData(self, rawdata):
+        hostsXML = self.__parseNMAPXMLToHostsXML(rawdata)
         clientsData = ClientsData()
         for hostXML in hostsXML:
-            portsXML = hostXML.findall("./ports/port")
-            addressXML = hostXML.findall("./address")
-            address = addressXML[0].attrib['addr']
+            portsXML, address = self.__parseHostXML(hostXML)
             clientData = ClientData(address)
             for portXML in portsXML:
-                portNumber = portXML.attrib["portid"]
-                servicesXML = portXML.findall("./service")
+                portNumber, servicesXML = self.__parsePortXML(portXML)
                 for serviceXML in servicesXML:
-                    serviceName = serviceXML.attrib.get('product','')
-                    serviceType = serviceXML.attrib['name']
-                    serviceData = ServiceData(name=serviceName, type=serviceType, port=portNumber, externallyAccessible=True)
+                    serviceData = self.__parseServiceXMLToServiceData(serviceXML, portNumber)
                     clientData.servicesData.addServiceData(serviceData)
             clientsData.addClientData(clientData)
         return clientsData
@@ -44,6 +60,6 @@ class RunNMAP(Attack.Attack):
         xmlPath = "/root/scan" + str(uuid.uuid4()) + ".xml"
         await client.executeShell("sudo nmap -sV -oX %s %s" % (xmlPath, ' '.join(operation.inScopeIPs)))
         result = await client.executeShell("cat %s" % xmlPath)
-        parsed = self.__parseToServiceData(result)
+        parsed = self.__parseNMAPXMLToServiceData(result)
         self.__storeData(operation, parsed)
         print(parsed)
