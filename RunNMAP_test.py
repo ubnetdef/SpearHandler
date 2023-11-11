@@ -1,10 +1,8 @@
-from Operations import Operation, MythicClient
-from Operations.MythicClient import MythicC2, MythicClient
-from mythic.mythic_classes import Mythic
-import asyncio
-import xml.etree.ElementTree as ET
+from Attacks.RunNMAP import RunNMAP
+from Data.Techniques.ClientsData import ClientsData
 
-xmlOutput = """<?xml version="1.0" encoding="UTF-8"?>
+def test_parser():
+    xmlOutput = """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE nmaprun>
 <?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
 <!-- Nmap 7.93 scan initiated Fri Nov 10 10:17:13 2023 as: nmap -sV -oX /root/scan0b20251e-a767-4a92-8674-a08dcfbb7ca4.xml 192.168.13.28 192.168.13.67 -->
@@ -64,34 +62,9 @@ xmlOutput = """<?xml version="1.0" encoding="UTF-8"?>
 <runstats><finished time="1699629446" timestr="Fri Nov 10 10:17:26 2023" summary="Nmap done at Fri Nov 10 10:17:26 2023; 2 IP addresses (2 hosts up) scanned in 13.60 seconds" elapsed="13.60" exit="success"/><hosts up="2" down="0" total="2"/>
 </runstats>
 </nmaprun>"""
+    print(dir(RunNMAP))
+    run = RunNMAP("test")
+    parsed: ClientsData = run._RunNMAP__parseToServiceData(xmlOutput)
+    print(parsed)
 
-async def main3():
-    xmlParsed = ET.fromstring(xmlOutput)
-    test = xmlParsed.findall("./host/ports/port")
-    print(test[0].attrib)
-    print(test[0].findall("./service")[0].attrib)
-
-async def main():
-    inScopeIPs = ["192.168.13.28", "192.168.13.67"]
-
-    testOperation = Operation.Operation(inScopeIPs)
-
-    displayID = 128
-    mythicServer = await MythicC2().connect()
-    print("WEEEEEEEEEEEEEEEEEEEEEE")
-    startKaliClient = MythicClient(displayID, mythicServer.mythicInstance)
-
-    testOperation.addC2Client(startKaliClient)
-
-    print("TEEEEEEEEE")
-    await testOperation.startOperation()
-    print("YEEEEEEEEEEEE")
-    #await testOperation.runAttack()
-
-async def main2():
-    mythic: MythicC2 = await MythicC2().connect()
-    clients: list[MythicClient] = await mythic.getActiveClients()
-    for client in clients:
-        print(str(await client.getLastCheckinSeconds()))
-
-asyncio.run(main())
+test_parser()

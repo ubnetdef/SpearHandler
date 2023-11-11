@@ -5,10 +5,10 @@ if TYPE_CHECKING:
     from Operations.Operation import Operation
 
 class Client():
-    id = None
 
     def __init__():
-        print("Hi!")
+        id = None
+        ipAddress = None
 
     async def executeAttack(self, attack: Attack.Attack, operation: Operation):
         await attack.execute(self, operation)

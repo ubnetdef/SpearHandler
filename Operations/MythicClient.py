@@ -3,11 +3,13 @@ from mythic import mythic
 from mythic.mythic_classes import *
 from datetime import datetime
 import time
+import re
 
 class MythicC2():
-    # Should be singleton
-    mythicInstance: mythic = None
-    apitoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTQ0NDkwMzgsImlhdCI6MTY5NDQzNDYzOCwidXNlcl9pZCI6MSwiYXV0aCI6ImFwaSJ9.LvxS_fIGrc-W4xLswYRwAa3BbMCymoz0DJgddU666Yo"
+    def __init__(self):
+        # Should be singleton
+        self.mythicInstance: mythic = None
+        self.apitoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTQ0NDkwMzgsImlhdCI6MTY5NDQzNDYzOCwidXNlcl9pZCI6MSwiYXV0aCI6ImFwaSJ9.LvxS_fIGrc-W4xLswYRwAa3BbMCymoz0DJgddU666Yo"
 
     # def __init__(self, ip):
     #     self.ipAddress = ip
@@ -37,13 +39,29 @@ class MythicClient(Client.Client):
         self.displayID = displayID
         self.mythicInstance = mythicInstance
 
+    async def getIPAddress(self):
+        returnAttributes = """
+            ip
+            active
+            id
+            display_id
+        """
+
+        clients = await mythic.get_all_active_callbacks(self.mythicInstance, custom_return_attributes=returnAttributes)
+        for client in clients:
+            if client['display_id'] == self.displayID:
+                rawIP = client['ip']
+                pattern = re.compile(r"\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\b", re.IGNORECASE)
+                ips = pattern.findall(rawIP)[0]
+                return ips[0]
+
     async def getLastCheckinSeconds(self):
         timestamp = await self.getLastCheckinTimestamp()
         if(timestamp == None):
             return None
 
         print(timestamp)
-        lastCheckin = datetime.fromtimestamp(str(timestamp))
+        lastCheckin = now.strftime("%m/%d/%Y, %H:%M:%S")
         currentTime = datetime.date.today()
         delta = currentTime - lastCheckin
         totalSeconds = delta.total_seconds()
