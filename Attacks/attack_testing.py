@@ -1,12 +1,12 @@
 from mythic import mythic
 import asyncio
-import MythicClient
+from Operations import MythicClient
 import pytest
 
 pytest_plugins = ('pytest_asyncio',)
 
 @pytest.mark.asyncio
-async def test_MythicClientCommand():
+async def RegKeyAttack():
     mythicClient = MythicClient.MythicClient(11)
     await mythicClient.initializeMythic()
     print(mythicClient)
