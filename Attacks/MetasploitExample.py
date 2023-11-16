@@ -1,4 +1,5 @@
 from pymetasploit3.msfrpc import *
+from Operations.MetasploitShell import *
 
 def main():
     client = MsfRpcClient('test', port=55552, server="192.168.254.95")
