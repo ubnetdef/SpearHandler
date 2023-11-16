@@ -8,8 +8,8 @@ import winreg
 from Attack import Attack
 class RegKey(Attack): 
     def execute(self, ProgramName, ProgramPath):
-
-        # Add the Windows Calculator to startup
+      
+        # Add the malacious program to startup
         self.program_name = ProgramName
         self.program_path = ProgramPath
 
