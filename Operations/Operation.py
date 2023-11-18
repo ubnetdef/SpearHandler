@@ -2,6 +2,7 @@ from Operations.Client import Client
 from Attacks.RunNMAP import RunNMAP
 from Attacks.Attack import Attack
 from Data.Techniques.ClientsData import ClientsData
+from Data.Techniques.ClientData import *
 from Attacks.ServiceStopper import ServiceStopper
 
 class Operation():
@@ -21,5 +22,5 @@ class Operation():
         testUbuntu: Client = self.c2Clients[1]
         await testUbuntu.executeAttack(ServiceStopper("servicestopped"), self)
 
-    async def runAttack(self, client: Client, attack: Attack):
-        await client.executeAttack(attack)
+    async def runAttack(self, clientData: ClientData, attack: Attack):
+        await clientData.c2Client.executeAttack(attack)
