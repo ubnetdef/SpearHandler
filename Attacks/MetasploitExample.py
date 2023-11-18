@@ -1,3 +1,8 @@
+import sys
+
+# setting path
+sys.path.append('../SpearHandler')
+
 from pymetasploit3.msfrpc import *
 from Operations.MetasploitShell import *
 

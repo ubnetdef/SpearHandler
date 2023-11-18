@@ -1,4 +1,4 @@
-from Client import *
+from Operations.Client import *
 from pymetasploit3.msfrpc import *
 
 class MetasploitC2():
@@ -6,9 +6,10 @@ class MetasploitC2():
         self.metasploitServer = MsfRpcClient(password, port=port, server=metasploitRPCIP)
 
     def runCommandOnSession(self, sessionID, command):
-        session = self.metasploitServer.client.sessions.session(self.sessionID)
+        session = self.metasploitServer.sessions.session(str(sessionID))
         session.write(command)
-        return session.read()
+        output = session.read()
+        return output
 
 class MetasploitShell(Client):
     def __init__(self, sessionID: int, metasploitServer: MetasploitC2):
@@ -18,4 +19,4 @@ class MetasploitShell(Client):
         self.metasploitServer = metasploitServer
 
     def executeShell(self, command):
-        self.metasploitServer.runCommandOnSession(self.sessionID, command)
+        return self.metasploitServer.runCommandOnSession(self.sessionID, command)
