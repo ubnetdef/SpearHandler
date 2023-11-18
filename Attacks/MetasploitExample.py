@@ -30,4 +30,8 @@ def main2():
     print(output)
     print(client.executeShell("whoami"))
 
-main2()
+def main3():
+    server = MetasploitC2("192.168.254.95", "test")
+    print(server.loadAttacks())
+
+main3()
