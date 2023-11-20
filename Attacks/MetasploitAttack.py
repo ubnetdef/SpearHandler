@@ -20,5 +20,10 @@ class MetasploitAttack(Attack.Attack):
     def __init__(self, module: ExploitModule):
         self.module = module
 
+    def matchesSearch(self, searchModuleName: str):
+        # This could be completely fucking wrong
+        name: str = self.module.info['Name']
+        return (searchModuleName in name)
+
     async def execute(self, client: Client.Client, operation: Operation.Operation):
         # how tf do we know who to execute it against
