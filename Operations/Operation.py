@@ -9,11 +9,11 @@ class Operation():
     def __init__(self, inScopeIPs=[], clients=ClientsData()):
         self.inScopeIPs = inScopeIPs
         self.clientsData: ClientsData = clients
-        self.c2Clients: list[Client] = []
+        self.attackLibrary: list[Attack] = []
 
-    def addC2Client(self, client: Client):
-        self.c2Clients.append(client)
-
+    def addAttack(self, attack: Attack):
+        self.attackLibrary.append(attack)
+    
     # A operation is intended to start w/ 1 client, that being a kali instance that will be the 'attacker', right off the bat it will then execute nmap
     async def startOperation(self):
         client: Client = self.c2Clients[0]
@@ -23,4 +23,4 @@ class Operation():
         await testUbuntu.executeAttack(ServiceStopper("servicestopped"), self)
 
     async def runAttack(self, clientData: ClientData, attack: Attack):
-        await clientData.c2Client.executeAttack(attack)
+        await clientData.c2Shell.executeAttack(attack)
