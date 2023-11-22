@@ -52,4 +52,10 @@ def main3():
     print(testOperation.attackLibrary)
     print("Time elapsed: %s" % (endTime-startTime))
 
-main3()
+def main4():
+    server = MetasploitC2("192.168.254.95", "test")
+    exploit = server.metasploitServer.modules.use('exploit', 'unix/ftp/vsftpd_234_backdoor')
+    exploit['RHOSTS'] = '192.168.13.28'
+    print(exploit.info)
+
+main4()

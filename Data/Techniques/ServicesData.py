@@ -11,6 +11,12 @@ class ServicesData:
     def addServiceData(self, serviceData: ServiceData.ServiceData):
         self.services.append(serviceData)
 
+    def hasServiceNameInMetasploitName(self, metasploitName: str):
+        for service in self.services:
+            if(service.name in metasploitName):
+                return True;
+        return False
+
     def mergeServicesData(self, newServicesData: ServicesData):
         for newServiceData in newServicesData:
             exists = False

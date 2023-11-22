@@ -8,6 +8,11 @@ if TYPE_CHECKING:
 class InitialAccessAttack:
     def __init__(self, AttackName):
         self.name = AttackName
+
+    def meetsPrereqs():
+        # Todo: Really should actually throw error here
+        pass
+
     def execute(self, targedHost: ClientData, metasploitServer: MetasploitC2, operation: Operation):
         # Todo: Really should actually throw error here
         pass

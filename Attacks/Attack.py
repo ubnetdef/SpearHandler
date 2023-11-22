@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 class Attack:
     def __init__(self, AttackName):
         self.name = AttackName
+
     def execute(self, client: Client, operation: Operation):
         # Todo: Really should actually throw error here
         pass

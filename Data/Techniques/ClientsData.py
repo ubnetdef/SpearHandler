@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from Data.Techniques.ClientData import ClientData
 if TYPE_CHECKING:
     from Data.Techniques.ClientsData import ClientsData
+    from Operations.Client import Client
 
 class ClientsData:
     def __init__(self):
@@ -16,6 +17,13 @@ class ClientsData:
             if client.ipAddress == ipAddress:
                 return client
         return None
+    
+    def getClientsWithServiceFromMetasploitName(self, metasploitName: str):
+        clientsWithService: list[Client] = []
+        for client in self.clients:
+            if(client.servicesData.hasServiceNameInMetasploitName(metasploitName)):
+                clientsWithService.append(client)
+        return clientsWithService
     
     def addClientData(self, clientData: ClientData):
         self.clients.append(clientData)

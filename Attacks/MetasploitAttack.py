@@ -27,6 +27,15 @@ class MetasploitAttack(InitialAccessAttack):
         if(len(missingRequirements) == 1 and missingRequirements[0] == 'RHOSTS'):
             return True
         return False
+    
+    # Maybe it should check per client
+    def meetsPrereqs(self, operation: Operation):
+        metasploitName: str = self.module.info['Name']
+        clientsWithService: list[Client.Client] = operation.ClientsData.getClientsWithServiceFromMetasploitName(metasploitName)
+        hasClientWithService = len(clientsWithService) != 0
+        return hasClientWithService
+        # for client in clientsWithService:
+        #     client.executeAttack(...)
 
     async def execute(self, targetHost: ClientData, metasploitServer: MetasploitC2, operation: Operation):
         # Known bug/limitation here: Metasploit Exploit Overlap Bug
@@ -34,10 +43,3 @@ class MetasploitAttack(InitialAccessAttack):
         output = self.exploitModule.execute(payload='cmd/unix/interact')
         metasploitShell = metasploitServer.getLatestSession()
         targetHost.c2Shells.append(metasploitShell)
-    def matchesSearch(self, searchModuleName: str):
-        # This could be completely fucking wrong
-        name: str = self.module.info['Name']
-        return (searchModuleName in name)
-
-    async def execute(self, client: Client.Client, operation: Operation.Operation):
-        # how tf do we know who to execute it against
