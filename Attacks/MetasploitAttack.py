@@ -34,3 +34,10 @@ class MetasploitAttack(InitialAccessAttack):
         output = self.exploitModule.execute(payload='cmd/unix/interact')
         metasploitShell = metasploitServer.getLatestSession()
         targetHost.c2Shells.append(metasploitShell)
+    def matchesSearch(self, searchModuleName: str):
+        # This could be completely fucking wrong
+        name: str = self.module.info['Name']
+        return (searchModuleName in name)
+
+    async def execute(self, client: Client.Client, operation: Operation.Operation):
+        # how tf do we know who to execute it against
