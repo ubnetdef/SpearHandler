@@ -9,3 +9,4 @@ class ClientData:
         # Options:
         # linux, windows, freebsd
         operatingSystem = None
+        

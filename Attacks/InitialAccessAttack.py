@@ -9,7 +9,7 @@ class InitialAccessAttack:
     def __init__(self, AttackName):
         self.name = AttackName
 
-    def meetsPrereqs():
+    def meetsPrereqs(self, clientData: ClientData):
         # Todo: Really should actually throw error here
         pass
 
