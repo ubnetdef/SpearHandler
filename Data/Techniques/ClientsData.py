@@ -28,6 +28,13 @@ class ClientsData:
                 clientsWhoMeetPreqreqs.append(client)
         return clientsWhoMeetPreqreqs
     
+    def getNextAttack(self):
+        for client in self.clients:
+            possibleNonUsedAttacks = client.getPossibleNonUsedAttacks();
+            if(len(possibleNonUsedAttacks) != 0):
+                return possibleNonUsedAttacks[0]
+        
+    
     def getClientsWithServiceFromMetasploitName(self, metasploitName: str):
         clientsWithService: list[Client] = []
         for client in self.clients:

@@ -1,4 +1,8 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from Data.Techniques import ServicesData
+if TYPE_CHECKING:
+    from Attacks.Attack import Attack
 
 class ClientData:
     # This design right here of using ipAddresses like a primary key has networking implications I can't think of right now
@@ -10,3 +14,18 @@ class ClientData:
         # linux, windows, freebsd
         operatingSystem = None
         
+    def getPossibleAttacks(self, attacks: list[Attack]):
+        possibleAttacks = []
+        for attack in attacks:
+            if(attack.meetsPrereqs(self)): # Why does meetPrereqs use ClientData and not c2client?
+                # ^ Cause it uses data of client to check prereqs, makes sense OOP
+                possibleAttacks.append(attack)
+        return possibleAttacks
+    
+    def getPossibleNonUsedAttacks(self, attacks: list[Attack]):
+        possibleAttacks = self.getPossibleAttacks(attacks)
+        possibleNonUsedAttacks = []
+        for possibleAttack in possibleAttacks:
+            if(not possibleAttack in self.attackLog):
+                possibleNonUsedAttacks.append(possibleAttack)
+        return possibleNonUsedAttacks
