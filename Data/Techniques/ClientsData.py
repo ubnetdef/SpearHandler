@@ -52,6 +52,12 @@ class ClientsData:
     def addClientData(self, clientData: ClientData):
         self.clients.append(clientData)
 
+    # Assumes first client added is for attacking, and first shell of that client is attacking
+    def getAttackC2Client(self):
+        attackClient = self.clients[0]
+        attackC2 = attackClient.c2Shells[0]
+        return attackC2
+
     def mergeClientData(self, newClientsData: ClientsData):
         for newClientData in newClientsData.getClientsData():
             exists = False

@@ -66,6 +66,7 @@ xmlOutput = """<?xml version="1.0" encoding="UTF-8"?>
 </nmaprun>"""
 
 from Operations.MetasploitShell import MetasploitC2
+from Data.Techniques.ClientData import ClientData
 
 async def main3():
     xmlParsed = ET.fromstring(xmlOutput)
@@ -81,12 +82,14 @@ async def main():
     server = MetasploitC2("192.168.254.95", "test")
     server.loadExploitAttacks(testOperation)
 
-    displayID = 129
+    displayID = 132
     mythicServer = await MythicC2().connect()
     print("WEEEEEEEEEEEEEEEEEEEEEE")
     startKaliClient = MythicClient(displayID, mythicServer.mythicInstance)
+    kaliIP = startKaliClient.getIPAddress()
+    kaliClientData = ClientData(kaliIP, [startKaliClient])
 
-    testOperation.addC2Client(startKaliClient)
+    testOperation.clientsData.addClientData(kaliClientData)
 
     print("TEEEEEEEEE")
     await testOperation.startOperation()

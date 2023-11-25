@@ -10,7 +10,7 @@ class ClientData:
     def __init__(self, ipAddress, c2Shells=None):
         self.ipAddress = ipAddress
         self.servicesData: ServicesData.ServicesData = ServicesData.ServicesData()
-        self.c2Shells: list[C2Client] = [c2Shells]
+        self.c2Shells: list[C2Client] = c2Shells
         # Options:
         # linux, windows, freebsd
         operatingSystem = None

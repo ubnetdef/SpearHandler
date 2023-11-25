@@ -30,8 +30,8 @@ class Operation():
     
     # A operation is intended to start w/ 1 client, that being a kali instance that will be the 'attacker', right off the bat it will then execute nmap
     async def startOperation(self):
-        attackClient: C2Client = self.c2Clients[0]
-        await self.scanAll()
+        attackClient: C2Client = self.clientsData.getAttackC2Client()
+        await self.scanAll(attackClient)
 
         nextAttack = self.clientsData.getNextAttack()
         while(nextAttack != None):

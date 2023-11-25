@@ -14,24 +14,24 @@ from Data.Techniques.ClientsData import ClientsData
 # This is intended to be run on the starting malicious attacker client
 
 class RunNMAP(Attack.Attack):
-    def __parsePortXML(portXML):
+    def __parsePortXML(self, portXML):
         portNumber = portXML.attrib["portid"]
         servicesXML = portXML.findall("./service")
         return portNumber, servicesXML
 
-    def __parseNMAPXMLToHostsXML(rawXMLString):
+    def __parseNMAPXMLToHostsXML(self, rawXMLString):
         xmlObject = ET.fromstring(rawXMLString)
         HOSTS_XML_PATH = "./host"
         hostsXML = xmlObject.findall(HOSTS_XML_PATH)
         return hostsXML
 
-    def __parseHostXML(hostXML):
+    def __parseHostXML(self, hostXML):
         portsXML = hostXML.findall("./ports/port")
         addressXML = hostXML.findall("./address")
         address = addressXML[0].attrib['addr']
         return portsXML, address
     
-    def __parseServiceXMLToServiceData(serviceXML, portNumber):
+    def __parseServiceXMLToServiceData(self, serviceXML, portNumber):
         serviceName = serviceXML.attrib.get('product','')
         serviceType = serviceXML.attrib['name']
         serviceData = ServiceData(name=serviceName, type=serviceType, port=portNumber, externallyAccessible=True)
