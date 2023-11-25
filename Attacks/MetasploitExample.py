@@ -47,7 +47,7 @@ def main3():
     server = MetasploitC2("192.168.254.95", "test")
 
     startTime = time.time()
-    server.loadExploitAttacks(testOperation)
+    server.loadExploitAttacksFromServer(testOperation)
     endTime = time.time()
     print(testOperation.attackLibrary)
     print("Time elapsed: %s" % (endTime-startTime))

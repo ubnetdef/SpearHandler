@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from Operations.Client import Client
+    from Operations.Client import C2Client
     from Operations.Operation import Operation
 from Attacks.Attack import Attack
 import random
@@ -14,7 +14,7 @@ class ServiceStopper(Attack):
         empty = len(clientData.servicesData.getServicesData()) == 0
         return (not empty)
     
-    async def execute(self, c2client: Client, operation: Operation):
+    async def execute(self, c2client: C2Client, operation: Operation):
         possibleServices = []
         ipAddress = await c2client.getIPAddress()
         for clientdata in operation.clientsData.getClientsData():

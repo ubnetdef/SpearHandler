@@ -16,3 +16,7 @@ What if I just make it run the first attack it finds it meets the prereqs for, t
 There could be some things wrong with that method that I may just not be considering right now.
 
 The way this is currently setup means that it will exhaust 1 client, then move on. It won't try multiple clients.
+
+## Needed refactoring
+Client has 2 classes, ClientData and C2Clients
+This should be the new setup, as data shouldn't store the c2clients

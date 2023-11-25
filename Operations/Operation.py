@@ -1,4 +1,4 @@
-from Operations.Client import Client
+from Operations.Client import C2Client
 from Attacks.RunNMAP import RunNMAP
 from Attacks.Attack import Attack
 from Data.Techniques.ClientsData import ClientsData
@@ -21,7 +21,7 @@ class Operation():
             clientsData.addClientData(clientData)
         return clientsData
 
-    async def scanAll(self, attackClient: Client):
+    async def scanAll(self, attackClient: C2Client):
         for clientData in self.clientsData.clients:
             ip = clientData.ipAddress
             # Working here
@@ -30,8 +30,12 @@ class Operation():
     
     # A operation is intended to start w/ 1 client, that being a kali instance that will be the 'attacker', right off the bat it will then execute nmap
     async def startOperation(self):
-        attackClient: Client = self.c2Clients[0]
+        attackClient: C2Client = self.c2Clients[0]
         await self.scanAll()
+
+        nextAttack = self.clientsData.getNextAttack()
+        while(nextAttack != None):
+            self.clientsData.runNextAttack()
         
         # await client.executeAttack(RunNMAP("nmaptest"), self)
         # # Todo: add more to start of operation here

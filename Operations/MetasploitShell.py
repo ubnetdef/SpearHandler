@@ -3,10 +3,40 @@ from Operations.Client import *
 from pymetasploit3.msfrpc import *
 from Attacks.MetasploitAttack import MetasploitAttack
 from typing import TYPE_CHECKING
+import pickle
 if TYPE_CHECKING:
     from Attacks.Attack import *
     from Attacks.MetasploitAttack import MetasploitAttack
     from Operation import *
+
+# Uses singleton
+class MetasploitModuleCache():
+    instance = None
+
+    def getInstance(self):
+        if(self.instance == None):
+            self.instance = self
+        return self.instance
+    
+    # Overwrites file
+    def cacheExploitModules(self, modules: list[ExploitModule]):
+        file = open("./exploit-modules-cache.pickle", "wb+")
+        pickle.dump(modules, file)
+
+    def cacheExploitModule(self, module: ExploitModule):
+        exploitModules: list[ExploitModule] = self.getCachedExploitModules()
+        exploitModules.append(module)
+        self.cacheExploitModules(exploitModules)
+    
+    def getCachedExploitModules(self):
+        try:
+            file = open("./exploit-modules-cache.pickle", "rb")
+            metasploitCache = pickle.load(file)
+            return metasploitCache
+        except FileNotFoundError:
+            return []
+        except EOFError:
+            return []
 
 class MetasploitC2():
     def __init__(self, metasploitRPCIP, password, port=55552):
@@ -20,13 +50,37 @@ class MetasploitC2():
         else:
             raise Exception("Unsupported required options in metasploit module")
 
+    def loadExploitAttacksFromCache(self, operation: Operation):
+        moduleCache = MetasploitModuleCache().getInstance()
+        exploitCache = moduleCache.getCachedExploitModules()
+
+        if(len(exploitCache) == 0):
+            raise Exception("No cahce")
+        
+        for module in exploitCache:
+            try:
+                self.loadModuleAsAttack(module, operation)
+            except Exception as e:
+                continue
+
     def loadExploitAttacks(self, operation: Operation):
+        try:
+            self.loadExploitAttacksFromCache(operation)
+        except Exception:
+            self.loadExploitAttacksFromServer(operation)
+            
+        
+
+    def loadExploitAttacksFromServer(self, operation: Operation):
         # Note to self
         # - Loads only certain sections of metasploit
+        # Todo: change this to load into cache
         modules = []
         modules += self.metasploitServer.modules.exploits
         for moduleName in modules:
             module = self.metasploitServer.modules.use('exploit', moduleName)
+            cache = MetasploitModuleCache().getInstance()
+            cache.cacheExploitModule(module)
             try:
                 self.loadModuleAsAttack(module, operation)
             except Exception as e:
@@ -53,7 +107,7 @@ class MetasploitC2():
         output = session.read()
         return output
 
-class MetasploitShell(Client):
+class MetasploitShell(C2Client):
     def __init__(self, sessionID: int, metasploitServer: MetasploitC2):
         id = None
         ipAddress = None

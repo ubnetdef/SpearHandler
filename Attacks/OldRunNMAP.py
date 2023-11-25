@@ -62,7 +62,7 @@ class RunNMAP(Attack.Attack):
             clientData = Database.Database().getOrAddClientData(ip)
             clientData.servicesData.addServiceData(serviceData)
 
-    async def execute(self, client: Client.Client, operation: Operation.Operation):
+    async def execute(self, client: Client.C2Client, operation: Operation.Operation):
         for ip in operation.inScopeIPs:
             # This may be a bad implementation as for each ip in scope it executes a mythic command
             xmlPath = "/root/scan" + str(uuid.uuid4()) + ".xml"

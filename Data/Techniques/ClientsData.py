@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from Data.Techniques.ClientData import ClientData
 if TYPE_CHECKING:
     from Data.Techniques.ClientsData import ClientsData
-    from Operations.Client import Client
+    from Operations.Client import C2Client
     from Attacks.Attack import Attack
     from Attacks.InitialAccessAttack import InitialAccessAttack
 
@@ -33,10 +33,17 @@ class ClientsData:
             possibleNonUsedAttacks = client.getPossibleNonUsedAttacks();
             if(len(possibleNonUsedAttacks) != 0):
                 return possibleNonUsedAttacks[0]
+        return None
+    
+    def runNextAttack(self):
+        for client in self.clients:
+            possibleNonUsedAttacks = client.getPossibleNonUsedAttacks();
+            if(len(possibleNonUsedAttacks) != 0):
+                client.c2Shells[0].executeAttack(possibleNonUsedAttacks)
         
     
     def getClientsWithServiceFromMetasploitName(self, metasploitName: str):
-        clientsWithService: list[Client] = []
+        clientsWithService: list[C2Client] = []
         for client in self.clients:
             if(client.servicesData.hasServiceNameInMetasploitName(metasploitName)):
                 clientsWithService.append(client)

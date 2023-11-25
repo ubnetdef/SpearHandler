@@ -65,6 +65,8 @@ xmlOutput = """<?xml version="1.0" encoding="UTF-8"?>
 </runstats>
 </nmaprun>"""
 
+from Operations.MetasploitShell import MetasploitC2
+
 async def main3():
     xmlParsed = ET.fromstring(xmlOutput)
     test = xmlParsed.findall("./host/ports/port")
@@ -76,16 +78,15 @@ async def main():
 
     testOperation = Operation.Operation(inScopeIPs)
 
+    server = MetasploitC2("192.168.254.95", "test")
+    server.loadExploitAttacks(testOperation)
+
     displayID = 129
     mythicServer = await MythicC2().connect()
     print("WEEEEEEEEEEEEEEEEEEEEEE")
     startKaliClient = MythicClient(displayID, mythicServer.mythicInstance)
 
-    displayID2 = 131
-    testClient = MythicClient(displayID2, mythicServer.mythicInstance)
-
     testOperation.addC2Client(startKaliClient)
-    testOperation.addC2Client(testClient)
 
     print("TEEEEEEEEE")
     await testOperation.startOperation()

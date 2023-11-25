@@ -30,7 +30,7 @@ class MythicC2():
         return activeClients
 
 # Maybe this should be named MythicC2
-class MythicClient(Client.Client):
+class MythicClient(Client.C2Client):
     mythicInstance = None
     displayID = None
     Mythic()

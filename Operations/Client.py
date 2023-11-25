@@ -3,9 +3,9 @@ from Attacks import Attack
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Operations.Operation import Operation
+    from Data.Techniques.ClientData import ClientData
 
-class Client():
-
+class C2Client():
     def __init__():
         id = None
         ipAddress = None
@@ -15,3 +15,8 @@ class Client():
 
     def executeShell(string):
         raise NotImplementedError("executeShell in client not implemented!")
+    
+class Client():
+    def __init__(self, clientData: ClientData, c2Clients: list[C2Client]):
+        self.clientData = clientData
+        self.c2Clients = c2Clients
