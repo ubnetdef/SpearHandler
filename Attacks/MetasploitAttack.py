@@ -30,7 +30,7 @@ class MetasploitAttack(InitialAccessAttack):
     
     # Maybe it should check per client
     def meetsPrereqs(self, clientData: ClientData):
-        metasploitName: str = self.module.info['Name']
+        metasploitName: str = self.exploitModule.info['name']
         hasMetasploitService: bool = clientData.servicesData.hasServiceNameInMetasploitName(metasploitName)
         return hasMetasploitService
         # for client in clientsWithService:

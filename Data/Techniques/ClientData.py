@@ -14,6 +14,7 @@ class ClientData:
         # Options:
         # linux, windows, freebsd
         operatingSystem = None
+        self.attackLog = []
         
     def getPossibleAttacks(self, attacks: list[Attack]):
         possibleAttacks = []

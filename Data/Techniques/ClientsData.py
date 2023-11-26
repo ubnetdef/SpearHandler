@@ -6,6 +6,7 @@ if TYPE_CHECKING:
     from Operations.Client import C2Client
     from Attacks.Attack import Attack
     from Attacks.InitialAccessAttack import InitialAccessAttack
+    from Operations.Operation import Operation
 
 class ClientsData:
     def __init__(self):
@@ -28,18 +29,19 @@ class ClientsData:
                 clientsWhoMeetPreqreqs.append(client)
         return clientsWhoMeetPreqreqs
     
-    def getNextAttack(self):
+    def getNextAttack(self, operation: Operation):
         for client in self.clients:
-            possibleNonUsedAttacks = client.getPossibleNonUsedAttacks();
+            possibleNonUsedAttacks = client.getPossibleNonUsedAttacks(operation.getAttackLibrary());
             if(len(possibleNonUsedAttacks) != 0):
                 return possibleNonUsedAttacks[0]
         return None
     
-    def runNextAttack(self):
+    def runNextAttack(self, operation: Operation):
         for client in self.clients:
-            possibleNonUsedAttacks = client.getPossibleNonUsedAttacks();
+            possibleNonUsedAttacks = client.getPossibleNonUsedAttacks(operation.getAttackLibrary());
             if(len(possibleNonUsedAttacks) != 0):
-                client.c2Shells[0].executeAttack(possibleNonUsedAttacks)
+                client.c2Shells[0].executeAttack(possibleNonUsedAttacks[0])
+                client.attackLog.append(possibleNonUsedAttacks[0])
         
     
     def getClientsWithServiceFromMetasploitName(self, metasploitName: str):
