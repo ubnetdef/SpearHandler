@@ -4,6 +4,7 @@ from Attacks.Attack import Attack
 from Data.Techniques.ClientsData import ClientsData
 from Data.Techniques.ClientData import *
 from Attacks.ServiceStopper import ServiceStopper
+from Operations.MetasploitShell import MetasploitC2
 
 class Operation():
     def __init__(self, inScopeIPs=[], clients=ClientsData()):
@@ -29,13 +30,16 @@ class Operation():
 
     
     # A operation is intended to start w/ 1 client, that being a kali instance that will be the 'attacker', right off the bat it will then execute nmap
-    async def startOperation(self):
+    async def startOperation(self, metasploitServer: MetasploitC2):
         attackClient: C2Client = self.clientsData.getAttackC2Client()
         await self.scanAll(attackClient)
 
         nextAttack = self.clientsData.getNextAttack(self)
         while(nextAttack != None):
-            self.clientsData.runNextAttack(self)
+            try:
+                await self.clientsData.runNextAttack(metasploitServer, self)
+            except Exception:
+                continue
         
         # await client.executeAttack(RunNMAP("nmaptest"), self)
         # # Todo: add more to start of operation here

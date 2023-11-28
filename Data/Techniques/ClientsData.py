@@ -1,11 +1,12 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from Data.Techniques.ClientData import ClientData
+from Attacks.InitialAccessAttack import InitialAccessAttack
 if TYPE_CHECKING:
+    from Operations.MetasploitShell import MetasploitC2
     from Data.Techniques.ClientsData import ClientsData
     from Operations.Client import C2Client
     from Attacks.Attack import Attack
-    from Attacks.InitialAccessAttack import InitialAccessAttack
     from Operations.Operation import Operation
 
 class ClientsData:
@@ -36,12 +37,18 @@ class ClientsData:
                 return possibleNonUsedAttacks[0]
         return None
     
-    def runNextAttack(self, operation: Operation):
+    async def runNextAttack(self, metasploitServer: MetasploitC2, operation: Operation):
         for client in self.clients:
             possibleNonUsedAttacks = client.getPossibleNonUsedAttacks(operation.getAttackLibrary());
             if(len(possibleNonUsedAttacks) != 0):
-                client.c2Shells[0].executeAttack(possibleNonUsedAttacks[0])
-                client.attackLog.append(possibleNonUsedAttacks[0])
+                # Todo: this seems like a bad way of seperating what clients to run on
+                if(isinstance(possibleNonUsedAttacks[0], InitialAccessAttack)):
+                    initialAccessAttack = possibleNonUsedAttacks[0]
+                    await initialAccessAttack.execute(client, metasploitServer, operation)
+                    client.attackLog.append(possibleNonUsedAttacks[0])
+                else:
+                    await client.c2Shells[0].executeAttack(possibleNonUsedAttacks[0], operation)
+                    client.attackLog.append(possibleNonUsedAttacks[0])
         
     
     def getClientsWithServiceFromMetasploitName(self, metasploitName: str):

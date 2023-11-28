@@ -29,7 +29,11 @@ class MetasploitAttack(InitialAccessAttack):
         return False
     
     # Maybe it should check per client
+    # Todo: make this support more than just linux
     def meetsPrereqs(self, clientData: ClientData):
+        if(not("linux" in self.exploitModule.info['fullname'] or "unix" in self.exploitModule.info['fullname'])):
+            return False
+
         metasploitName: str = self.exploitModule.info['name']
         hasMetasploitService: bool = clientData.servicesData.hasServiceNameInMetasploitName(metasploitName)
         return hasMetasploitService
@@ -39,6 +43,10 @@ class MetasploitAttack(InitialAccessAttack):
     async def execute(self, targetHost: ClientData, metasploitServer: MetasploitC2, operation: Operation):
         # Known bug/limitation here: Metasploit Exploit Overlap Bug
         # Todo: Data will have to be passed in smartly
-        output = self.exploitModule.execute(payload='cmd/unix/interact')
+        # This breaks because it tries to run payload and assumes it's a module
+        # Todo: make work for multiple OSes by dynamically chaning payload
+        # Todo: Change determining if attack was successful or not
+        #output = self.exploitModule.execute(payload='cmd/unix/interact')
+        output = self.exploitModule.execute()
         metasploitShell = metasploitServer.getLatestSession()
         targetHost.c2Shells.append(metasploitShell)

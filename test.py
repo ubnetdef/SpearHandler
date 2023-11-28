@@ -79,8 +79,8 @@ async def main():
 
     testOperation = Operation.Operation(inScopeIPs)
 
-    server = MetasploitC2("192.168.254.95", "test")
-    server.loadExploitAttacks(testOperation)
+    metasploitServer = MetasploitC2("192.168.254.95", "test")
+    metasploitServer.loadExploitAttacks(testOperation)
 
     displayID = 132
     mythicServer = await MythicC2().connect()
@@ -92,7 +92,7 @@ async def main():
     testOperation.clientsData.addClientData(kaliClientData)
 
     print("TEEEEEEEEE")
-    await testOperation.startOperation()
+    await testOperation.startOperation(metasploitServer)
     print("YEEEEEEEEEEEE")
     #await testOperation.runAttack()
 
