@@ -13,7 +13,7 @@ class ServicesData:
 
     def hasServiceNameInMetasploitName(self, metasploitName: str):
         for service in self.services:
-            if(service.name in metasploitName and service.name != ''):
+            if(service.name.lower() in metasploitName.lower() and service.name != ''):
                 return True;
         return False
 

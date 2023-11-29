@@ -75,7 +75,8 @@ async def main3():
     print(test[0].findall("./service")[0].attrib)
 
 async def main():
-    inScopeIPs = ["192.168.13.28", "192.168.13.67"]
+    #inScopeIPs = ["192.168.13.28", "192.168.13.67"]
+    inScopeIPs = ["192.168.13.28"]
 
     testOperation = Operation.Operation(inScopeIPs)
 
