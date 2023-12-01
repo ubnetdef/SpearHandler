@@ -31,10 +31,13 @@ class MetasploitAttack(InitialAccessAttack):
     # Maybe it should check per client
     # Todo: make this support more than just linux
     def meetsPrereqs(self, clientData: ClientData):
-        if(not("linux" in self.exploitModule.info['fullname'] or "unix" in self.exploitModule.info['fullname'])):
+        isForLinux = "linux" in self.exploitModule.info['fullname']
+        isForUnix = "unix" in self.exploitModule.info['fullname']
+        if(not(isForLinux) and not(isForUnix)):
             return False
 
-        metasploitName: str = self.exploitModule.info['name']
+        metasploitName: str = self.exploitModule.info['fullname']
+
         hasMetasploitService: bool = clientData.servicesData.hasServiceNameInMetasploitName(metasploitName)
         return hasMetasploitService
         # for client in clientsWithService:

@@ -46,6 +46,7 @@ class MetasploitC2():
         newAttack = MetasploitAttack(module, self)
         if(newAttack.onlyRequiresRHOSTS()):
             operation.addAttack(newAttack)
+
             print("%s module loaded!" % module.info['name'])
         else:
             raise Exception("Unsupported required options in metasploit module")
