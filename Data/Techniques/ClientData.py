@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 class ClientData:
     # This design right here of using ipAddresses like a primary key has networking implications I can't think of right now
-    def __init__(self, ipAddress, c2Shells=None):
+    def __init__(self, ipAddress, c2Shells=[]):
         self.ipAddress = ipAddress
         self.servicesData: ServicesData.ServicesData = ServicesData.ServicesData()
         self.c2Shells: list[C2Client] = c2Shells
