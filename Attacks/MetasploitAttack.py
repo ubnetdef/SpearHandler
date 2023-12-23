@@ -44,6 +44,9 @@ class MetasploitAttack(InitialAccessAttack):
         if("apache_normalize" in metasploitName):
             print("b")
 
+        if("vsftpd" in metasploitName):
+            print("b")
+
         hasMetasploitService: bool = clientData.servicesData.hasServiceNameInMetasploitName(metasploitName)
         if(hasMetasploitService):
             print("a")

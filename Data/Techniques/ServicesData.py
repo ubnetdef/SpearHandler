@@ -12,10 +12,6 @@ class ServicesData:
         self.services.append(serviceData)
 
     def hasServiceNameInMetasploitName(self, metasploitName: str):
-        # Todo: THIS CODE RIGHT BELOW IS A BUGGY DEBUG, REMOVE IT
-        if("apache_normalize" in metasploitName):
-            return True
-
         for service in self.services:
             if(service.name.lower() in metasploitName.lower() and service.name != ''):
                 return True;
