@@ -34,12 +34,19 @@ class MetasploitAttack(InitialAccessAttack):
     def meetsPrereqs(self, clientData: ClientData):
         isForLinux = "linux" in self.exploitModule.info['fullname']
         isForUnix = "unix" in self.exploitModule.info['fullname']
-        if(not(isForLinux) and not(isForUnix)):
+        isMulti = "multi" in self.exploitModule.info['fullname']
+        if(not(isForLinux) and not(isForUnix) and not(isMulti)):
             return False
 
         metasploitName: str = self.exploitModule.info['fullname']
 
+        print(metasploitName)
+        if("apache_normalize" in metasploitName):
+            print("b")
+
         hasMetasploitService: bool = clientData.servicesData.hasServiceNameInMetasploitName(metasploitName)
+        if(hasMetasploitService):
+            print("a")
         return hasMetasploitService
         # for client in clientsWithService:
         #     client.executeAttack(...)

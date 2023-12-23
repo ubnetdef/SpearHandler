@@ -47,6 +47,8 @@ class MetasploitC2():
         if(newAttack.onlyRequiresRHOSTS()):
             operation.addAttack(newAttack)
 
+            if("apache_normalize" in module.info['fullname']):
+                print("asdfasdf")
             print("%s module loaded!" % module.info['name'])
         else:
             raise Exception("Unsupported required options in metasploit module")
