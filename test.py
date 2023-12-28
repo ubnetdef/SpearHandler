@@ -83,7 +83,7 @@ async def main():
     metasploitServer = MetasploitC2("192.168.254.95", "test")
     metasploitServer.loadExploitAttacks(testOperation)
 
-    displayID = 136
+    displayID = 137
     mythicServer = await MythicC2().connect()
     print("WEEEEEEEEEEEEEEEEEEEEEE")
     startKaliClient = MythicClient(displayID, mythicServer.mythicInstance)
