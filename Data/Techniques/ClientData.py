@@ -15,7 +15,12 @@ class ClientData:
         # linux, windows, freebsd
         operatingSystem = None
         self.attackLog = []
-        
+    
+    def getPossibleNonUsedAttacks(self, attacks: list[Attack]):
+        possibleAttacks = self.getPossibleAttacks(attacks)
+        possibleNonUsedAttacks = self.getNonUsedAttacks(possibleAttacks)
+        return possibleNonUsedAttacks
+    
     def getPossibleAttacks(self, attacks: list[Attack]):
         possibleAttacks = []
         for attack in attacks:
@@ -24,10 +29,9 @@ class ClientData:
                 possibleAttacks.append(attack)
         return possibleAttacks
     
-    def getPossibleNonUsedAttacks(self, attacks: list[Attack]):
-        possibleAttacks = self.getPossibleAttacks(attacks)
-        possibleNonUsedAttacks = []
-        for possibleAttack in possibleAttacks:
-            if(not possibleAttack in self.attackLog):
-                possibleNonUsedAttacks.append(possibleAttack)
-        return possibleNonUsedAttacks
+    def getNonUsedAttacks(self, attacks: [Attack]):
+        nonUsedAttacks = []
+        for attack in attacks:
+            if(attack not in self.attackLog):
+                nonUsedAttacks.append(attack)
+        return nonUsedAttacks

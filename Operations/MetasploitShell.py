@@ -121,4 +121,4 @@ class MetasploitShell(C2Client):
         return self.ipAddress
 
     def executeShell(self, command):
-        return self.metasploitServer.runCommandOnSession(self.sessionID, command)
+        return self.metasploitServer.runCommandOnSession(self.sessionID, "execute " + command)

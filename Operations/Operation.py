@@ -11,40 +11,6 @@ class Operation():
         self.inScopeIPs = inScopeIPs
         self.clientsData: ClientsData = clients
         self.attackLibrary: list[Attack] = []
-
-    def addAttack(self, attack: Attack):
-        self.attackLibrary.append(attack)
-
-    def registerAllInScope(self):
-        clientsData = ClientsData()
-        for inScopeIP in self.inScopeIPs:
-            clientData = ClientData(inScopeIP)
-            clientsData.addClientData(clientData)
-        return clientsData
-    
-    def getAttackLibrary(self):
-        return self.attackLibrary
-
-    async def scanAll(self, attackClient: C2Client):
-        await attackClient.executeAttack(RunNMAP("nmaptest"), self)
-
-    async def startInitialAccess(self, metasploitServer: MetasploitC2):
-        nextAttack = self.clientsData.getNextAttack(self)
-        while(nextAttack != None):
-            try:
-                await self.clientsData.runNextAttack(metasploitServer, self)
-                nextAttack = self.clientsData.getNextAttack(self)
-            except Exception as e:
-                continue
-        self.clientsData.clients.pop(0)
-
-    async def stopRandomServiceOnAllClients(self):
-        for client in self.clientsData.clients:
-            try:
-                shell: C2Client = client.c2Shells[0]
-                await shell.executeAttack(ServiceStopper("service stopper"), self)
-            except Exception as e:
-                pass
     
     # A operation is intended to start w/ 1 client, that being a kali instance that will be the 'attacker', right off the bat it will then execute nmap
     async def startOperation(self, metasploitServer: MetasploitC2):
@@ -58,5 +24,39 @@ class Operation():
         # testUbuntu: Client = self.c2Clients[1]
         # await testUbuntu.executeAttack(ServiceStopper("servicestopped"), self)
 
+    async def scanAll(self, attackClient: C2Client):
+        await attackClient.executeAttack(RunNMAP("nmaptest"), self)
+
+    async def startInitialAccess(self, metasploitServer: MetasploitC2):
+        nextAttack, _ = self.clientsData.getNextAttackAndClient(self)
+        while(nextAttack != None):
+            try:
+                await self.clientsData.runNextAttack(metasploitServer, self)
+                nextAttack = self.clientsData.getNextAttackAndClient(self)
+            except Exception as e:
+                continue
+        self.clientsData.clients.pop(0)
+
+    async def stopRandomServiceOnAllClients(self):
+        for client in self.clientsData.clients:
+            try:
+                shell: C2Client = client.c2Shells[0]
+                await shell.executeAttack(ServiceStopper("service stopper"), self)
+            except Exception as e:
+                pass
+
     async def runAttack(self, clientData: ClientData, attack: Attack):
         await clientData.c2Shell.executeAttack(attack)
+
+    def addAttack(self, attack: Attack):
+        self.attackLibrary.append(attack)
+
+    def registerAllInScope(self):
+        clientsData = ClientsData()
+        for inScopeIP in self.inScopeIPs:
+            clientData = ClientData(inScopeIP)
+            clientsData.addClientData(clientData)
+        return clientsData
+    
+    def getAttackLibrary(self):
+        return self.attackLibrary

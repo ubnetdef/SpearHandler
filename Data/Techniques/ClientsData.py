@@ -30,25 +30,30 @@ class ClientsData:
                 clientsWhoMeetPreqreqs.append(client)
         return clientsWhoMeetPreqreqs
     
-    def getNextAttack(self, operation: Operation):
+    async def runNextAttack(self, metasploitServer: MetasploitC2, operation: Operation):
+        nextAttack, client = self.getNextAttackAndClient(operation)
+        # Todo: this seems like a bad way of seperating what clients to run on, fix it
+        if(isinstance(nextAttack, InitialAccessAttack)):
+            # Todo: fix some bug right here where it just takes forever
+            await nextAttack.execute(client, metasploitServer, operation)
+            client.attackLog.append(nextAttack)
+        else:
+            await client.c2Shells[0].executeAttack(nextAttack, operation)
+            client.attackLog.append(nextAttack)
+
+    def getNextAttackAndClient(self, operation: Operation):
         for client in self.clients:
             possibleNonUsedAttacks = client.getPossibleNonUsedAttacks(operation.getAttackLibrary());
-            if(len(possibleNonUsedAttacks) != 0):
-                return possibleNonUsedAttacks[0]
+            try:
+                return (self.chooseAttackFromAttacks(possibleNonUsedAttacks), client)
+            except Exception:
+                continue
         return None
     
-    async def runNextAttack(self, metasploitServer: MetasploitC2, operation: Operation):
-        for client in self.clients:
-            possibleNonUsedAttacks = client.getPossibleNonUsedAttacks(operation.getAttackLibrary());
-            if(len(possibleNonUsedAttacks) != 0):
-                # Todo: this seems like a bad way of seperating what clients to run on
-                if(isinstance(possibleNonUsedAttacks[0], InitialAccessAttack)):
-                    initialAccessAttack = possibleNonUsedAttacks[0]
-                    await initialAccessAttack.execute(client, metasploitServer, operation)
-                    client.attackLog.append(possibleNonUsedAttacks[0])
-                else:
-                    await client.c2Shells[0].executeAttack(possibleNonUsedAttacks[0], operation)
-                    client.attackLog.append(possibleNonUsedAttacks[0])
+    def chooseAttackFromAttacks(self, attacks: [Attack]):
+        if(len(attacks) == 0):
+            raise Exception("No attacks to choose from!")
+        return attacks[0]
         
     
     def getClientsWithServiceFromMetasploitName(self, metasploitName: str):
