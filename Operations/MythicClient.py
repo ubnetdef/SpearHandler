@@ -1,4 +1,4 @@
-from Operations import Client
+from Operations.Client import Client, C2Client
 from mythic import mythic
 from mythic.mythic_classes import *
 from datetime import datetime
@@ -30,7 +30,7 @@ class MythicC2():
         return activeClients
 
 # Maybe this should be named MythicC2
-class MythicClient(Client.C2Client):
+class MythicClient(C2Client):
     mythicInstance = None
     displayID = None
     Mythic()
@@ -55,6 +55,7 @@ class MythicClient(Client.C2Client):
                 parsedIP = pattern.search(rawIP)[0]
                 return parsedIP
 
+    # Todo: Fix this unused code
     async def getLastCheckinSeconds(self):
         timestamp = await self.getLastCheckinTimestamp()
         if(timestamp == None):

@@ -1,4 +1,4 @@
-from Operations import Operation, MythicClient
+from Operations.Operation import Operation
 from Operations.MythicClient import MythicC2, MythicClient
 from mythic.mythic_classes import Mythic
 import asyncio
@@ -78,7 +78,7 @@ async def main():
     #inScopeIPs = ["192.168.13.28", "192.168.13.67"]
     inScopeIPs = ["192.168.13.28"]
 
-    testOperation = Operation.Operation(inScopeIPs)
+    testOperation = Operation(inScopeIPs)
 
     metasploitServer = MetasploitC2("192.168.254.95", "test")
     metasploitServer.loadExploitAttacks(testOperation)

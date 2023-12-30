@@ -1,14 +1,18 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from typing import List
-from Data.Techniques import ServiceData, ServicesData
+from Data.Techniques.ServiceData import ServiceData
+if TYPE_CHECKING:
+    from Data.Techniques.ServicesData import ServicesData
 
 class ServicesData:
     def __init__(self):
-        self.services: List[ServiceData.ServiceData] = []
+        self.services: List[ServiceData] = []
 
     def getServicesData(self):
         return self.services
     
-    def addServiceData(self, serviceData: ServiceData.ServiceData):
+    def addServiceData(self, serviceData: ServiceData):
         self.services.append(serviceData)
 
     def hasServiceNameInMetasploitName(self, metasploitName: str):

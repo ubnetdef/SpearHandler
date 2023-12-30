@@ -1,13 +1,13 @@
 from mythic import mythic
 import asyncio
-from Operations import MythicClient
+from Operations.MythicClient import MythicClient
 import pytest
 
 pytest_plugins = ('pytest_asyncio',)
 
 @pytest.mark.asyncio
 async def RegKeyAttack():
-    mythicClient = MythicClient.MythicClient(11)
+    mythicClient = MythicClient(11)
     await mythicClient.initializeMythic()
     print(mythicClient)
     await mythicClient.executeCommand("ls", "", 7)
@@ -15,7 +15,7 @@ async def RegKeyAttack():
 
 @pytest.mark.asyncio
 async def test_MythicClientUpload():
-    mythicClient = MythicClient.MythicClient(16)
+    mythicClient = MythicClient(16)
     await mythicClient.initializeMythic()
     print(mythicClient)
     await mythicClient.upload_file(b"test", "C:/Users/Blake/Desktop/test1")

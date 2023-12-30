@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from Data.Techniques import ServicesData
+from Data.Techniques.ServicesData import ServicesData
 if TYPE_CHECKING:
     from Attacks.Attack import Attack
     from Operations.Client import C2Client
@@ -9,7 +9,7 @@ class ClientData:
     # This design right here of using ipAddresses like a primary key has networking implications I can't think of right now
     def __init__(self, ipAddress, c2Shells=[]):
         self.ipAddress = ipAddress
-        self.servicesData: ServicesData.ServicesData = ServicesData.ServicesData()
+        self.servicesData: ServicesData = ServicesData()
         self.c2Shells: list[C2Client] = c2Shells
         # Options:
         # linux, windows, freebsd

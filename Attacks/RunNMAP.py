@@ -1,9 +1,10 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from Operations import Client, Operation
-from Attacks import Attack
-from Data.Techniques import Database
+    from Operations.Client import Client, C2Client
+    from Operations.Operation import Operation
+from Attacks.Attack import Attack
+from Data.Techniques.Database import Database
 from Data.Techniques.ServiceData import ServiceData
 from Data.Techniques.ClientData import ClientData
 import re
@@ -13,7 +14,7 @@ from Data.Techniques.ClientsData import ClientsData
 
 # This is intended to be run on the starting malicious attacker client
 
-class RunNMAP(Attack.Attack):
+class RunNMAP(Attack):
     def __parsePortXML(self, portXML):
         portNumber = portXML.attrib["portid"]
         servicesXML = portXML.findall("./service")
@@ -51,10 +52,10 @@ class RunNMAP(Attack.Attack):
             clientsData.addClientData(clientData)
         return clientsData
 
-    def __storeData(self, operation: Operation.Operation, clientsData: ClientsData):
+    def __storeData(self, operation: Operation, clientsData: ClientsData):
         operation.clientsData.mergeClientData(clientsData)
 
-    async def execute(self, client: Client.C2Client, operation: Operation.Operation):
+    async def execute(self, client: Client.C2Client, operation: Operation):
         print(operation.inScopeIPs)
         # This may be a bad implementation as for each ip in scope it executes a mythic command
         xmlPath = "/root/scan" + str(uuid.uuid4()) + ".xml"

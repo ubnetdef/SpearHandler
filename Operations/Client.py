@@ -1,5 +1,5 @@
 from __future__ import annotations
-from Attacks import Attack
+from Attacks.Attack import Attack
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Operations.Operation import Operation
@@ -10,7 +10,7 @@ class C2Client():
         id = None
         ipAddress = None
 
-    async def executeAttack(self, attack: Attack.Attack, operation: Operation):
+    async def executeAttack(self, attack: Attack, operation: Operation):
         await attack.execute(self, operation)
 
     def executeShell(string):

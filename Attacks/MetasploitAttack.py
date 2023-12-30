@@ -1,10 +1,11 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from Operations import Client, Operation
+    from Operations.Client import Client, C2Client
+    from Operations.Operation import Operation
     from Operations.MetasploitShell import MetasploitC2, MetasploitShell
 from Attacks.InitialAccessAttack import InitialAccessAttack
-from Data.Techniques import Database
+from Data.Techniques.Database import Database
 from Data.Techniques.ServiceData import ServiceData
 from Data.Techniques.ClientData import ClientData
 import re

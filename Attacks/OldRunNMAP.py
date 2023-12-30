@@ -9,6 +9,8 @@ import re
 import uuid
 import xml.etree.ElementTree as ET
 
+# These imports are broken, do not use this
+
 # This is intended to be run on the starting malicious attacker client
 
 class RunNMAP(Attack.Attack):
