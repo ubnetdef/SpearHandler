@@ -1,4 +1,4 @@
-from Operations.Client import Client, C2Client
+from Shells.Client import Client, C2Client
 from mythic import mythic
 from mythic.mythic_classes import *
 from datetime import datetime

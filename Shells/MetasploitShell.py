@@ -1,5 +1,5 @@
 from __future__ import annotations
-from Operations.Client import *
+from Shells.Client import *
 from pymetasploit3.msfrpc import *
 from Attacks.MetasploitAttack import MetasploitAttack
 from typing import TYPE_CHECKING
@@ -117,7 +117,7 @@ class MetasploitShell(C2Client):
         self.sessionID = sessionID
         self.metasploitServer = metasploitServer
 
-    async def getIPAddress(self):
+    def getIPAddress(self):
         return self.ipAddress
 
     def executeShell(self, command):

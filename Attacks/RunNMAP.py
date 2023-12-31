@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from Operations.Client import Client, C2Client
+    from Shells.Client import Client, C2Client
     from Operations.Operation import Operation
 from Attacks.Attack import Attack
 from Data.Techniques.Database import Database

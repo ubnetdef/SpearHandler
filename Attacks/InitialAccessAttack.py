@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Data.Techniques.ClientData import ClientData
     from Operations.Operation import Operation
-    from Operations.MetasploitShell import *
+    from Shells.MetasploitShell import *
 
 class InitialAccessAttack:
     def __init__(self, AttackName):

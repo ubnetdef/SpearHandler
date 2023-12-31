@@ -1,7 +1,9 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+
+from Shells import Client
 if TYPE_CHECKING:
-    from Operations import Client, Operation
+    from Operations import Operation
 from Attacks import Attack
 from Data.Techniques import Database
 from Data.Techniques import ServiceData

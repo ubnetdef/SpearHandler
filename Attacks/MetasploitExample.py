@@ -4,7 +4,7 @@ import sys
 sys.path.append('../SpearHandler')
 
 from pymetasploit3.msfrpc import *
-from Operations.MetasploitShell import *
+from Shells.MetasploitShell import *
 from Operations.Operation import *
 
 def main():

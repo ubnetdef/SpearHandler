@@ -1,5 +1,5 @@
 from Operations.Operation import Operation
-from Operations.MythicClient import MythicC2, MythicClient
+from Shells.MythicClient import MythicC2, MythicClient
 from mythic.mythic_classes import Mythic
 import asyncio
 import xml.etree.ElementTree as ET
@@ -65,7 +65,7 @@ xmlOutput = """<?xml version="1.0" encoding="UTF-8"?>
 </runstats>
 </nmaprun>"""
 
-from Operations.MetasploitShell import MetasploitC2
+from Shells.MetasploitShell import MetasploitC2
 from Data.Techniques.ClientData import ClientData
 
 async def main3():
@@ -93,7 +93,7 @@ async def main():
     testOperation.clientsData.addClientData(kaliClientData)
 
     print("TEEEEEEEEE")
-    await testOperation.startOperation(metasploitServer)
+    await testOperation.startOperation(metasploitServer, mythicServer)
     print("YEEEEEEEEEEEE")
     #await testOperation.runAttack()
 

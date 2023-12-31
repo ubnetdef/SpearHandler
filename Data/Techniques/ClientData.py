@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from Data.Techniques.ServicesData import ServicesData
 if TYPE_CHECKING:
     from Attacks.Attack import Attack
-    from Operations.Client import C2Client
+    from Shells.Client import C2Client
 
 class ClientData:
     # This design right here of using ipAddresses like a primary key has networking implications I can't think of right now

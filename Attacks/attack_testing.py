@@ -1,6 +1,6 @@
 from mythic import mythic
 import asyncio
-from Operations.MythicClient import MythicClient
+from Shells.MythicClient import MythicClient
 import pytest
 
 pytest_plugins = ('pytest_asyncio',)

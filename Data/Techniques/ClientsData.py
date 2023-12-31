@@ -3,9 +3,9 @@ from typing import TYPE_CHECKING
 from Data.Techniques.ClientData import ClientData
 from Attacks.InitialAccessAttack import InitialAccessAttack
 if TYPE_CHECKING:
-    from Operations.MetasploitShell import MetasploitC2
+    from Shells.MetasploitShell import MetasploitC2
     from Data.Techniques.ClientsData import ClientsData
-    from Operations.Client import C2Client
+    from Shells.Client import C2Client
     from Attacks.Attack import Attack
     from Operations.Operation import Operation
 
