@@ -46,7 +46,7 @@ class ClientsData:
             possibleNonUsedAttacks = client.getPossibleNonUsedAttacks(operation.getAttackLibrary());
             try:
                 return (self.chooseAttackFromAttacks(possibleNonUsedAttacks), client)
-            except Exception:
+            except Exception as e:
                 continue
         return None
     
