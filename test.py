@@ -76,14 +76,14 @@ async def main3():
 
 async def main():
     #inScopeIPs = ["192.168.13.28", "192.168.13.67"]
-    inScopeIPs = ["192.168.13.28"]
+    inScopeIPs = ["192.168.13.136"]
 
     testOperation = Operation(inScopeIPs)
 
-    metasploitServer = MetasploitC2("192.168.254.95", "test")
+    metasploitServer = MetasploitC2("192.168.13.84", "test")
     metasploitServer.loadExploitAttacks(testOperation)
 
-    displayID = 137
+    displayID = 180
     mythicServer = await MythicC2().connect()
     print("WEEEEEEEEEEEEEEEEEEEEEE")
     startKaliClient = MythicClient(displayID, mythicServer.mythicInstance)
