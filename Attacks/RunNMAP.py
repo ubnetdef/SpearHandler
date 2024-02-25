@@ -58,7 +58,7 @@ class RunNMAP(Attack.Attack):
         print(operation.inScopeIPs)
         # This may be a bad implementation as for each ip in scope it executes a mythic command
         xmlPath = "/root/scan" + str(uuid.uuid4()) + ".xml"
-        await client.executeShell("sudo nmap -sV -oX %s %s" % (xmlPath, ' '.join(operation.inScopeIPs)))
+        await client.executeShell("sudo nmap -f --randomize-hosts -sV -oX %s %s" % (xmlPath, ' '.join(operation.inScopeIPs)))
         result = await client.executeShell("cat %s" % xmlPath)
         parsed = self.__parseNMAPXMLToServiceData(result)
         self.__storeData(operation, parsed)
